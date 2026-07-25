@@ -2,10 +2,7 @@ package com.cibertec.klearning.entity;
 
 import com.cibertec.klearning.entity.base.AuditEntity;
 import com.cibertec.klearning.entity.base.AuditEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -19,7 +16,8 @@ import java.time.LocalDateTime;
 public class Ovas extends AuditEntity {
 
     @Id
-    @Column(name = "idOva", length = 8)
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "idOva", length = 36, updatable = false)
     private String idOva;
 
     @Column(name = "nombre", nullable = false, length = 200)

@@ -1,10 +1,7 @@
 package com.cibertec.klearning.entity;
 
 import com.cibertec.klearning.entity.base.AuditEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
@@ -17,7 +14,8 @@ import lombok.*;
 public class Rol extends AuditEntity {
 
     @Id
-    @Column(name = "idRol", length = 8)
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "idRol", length = 36, updatable = false)
     private String idRol;
 
     @Column(name = "nombreRol", nullable = false, length = 100)

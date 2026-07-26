@@ -19,13 +19,11 @@ public class Usuario extends AuditEntity {
     private String idUsuario;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "idPersona", nullable = false,
-            foreignKey = @ForeignKey(name = "FK_Usuario_Persona"))
+    @JoinColumn(name = "idPersona", nullable = false)
     private Persona persona;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "idRol", nullable = false,
-            foreignKey = @ForeignKey(name = "FK_Usuario_Rol"))
+    @JoinColumn(name = "idRol", nullable = false)
     private Rol rol;
 
     @Column(name = "usuario", nullable = false, length = 100)

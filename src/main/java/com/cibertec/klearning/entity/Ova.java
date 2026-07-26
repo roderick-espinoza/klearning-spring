@@ -1,7 +1,6 @@
 package com.cibertec.klearning.entity;
 
 import com.cibertec.klearning.entity.base.AuditEntity;
-import com.cibertec.klearning.entity.base.AuditEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -13,7 +12,7 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Ovas extends AuditEntity {
+public class Ova extends AuditEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -34,25 +33,4 @@ public class Ovas extends AuditEntity {
 
     @Column(name = "duracion", nullable = false)
     private Integer duracion;
-
-    @Column(name = "estado", nullable = false, length = 1)
-    private String estado;
-
-    @Column(name = "createUser", nullable = false, length = 50)
-    private String createUser;
-
-    @Column(name = "createDate", nullable = false)
-    private LocalDateTime createDate;
-
-    @Column(name = "updatedUser", length = 50)
-    private String updatedUser;
-
-    @Column(name = "updatedDate")
-    private LocalDateTime updatedDate;
-
-    @Column(name = "deletedDate")
-    private LocalDateTime deletedDate;
-
-    @Column(name = "deletedUser", length = 50)
-    private String deletedUser;
 }

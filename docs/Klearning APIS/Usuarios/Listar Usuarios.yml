@@ -1,0 +1,22 @@
+info:
+  name: Listar Usuarios
+  type: http
+  seq: 1
+
+http:
+  method: GET
+  url: "{{baseUrl}}/api/v1/usuarios"
+  headers:
+    - name: Authorization
+      value: "Bearer {{authToken}}"
+  auth: none
+
+docs: |-
+  Cada usuario devuelve su lista de roles, que sale de la tabla
+  intermedia usuarios_roles.
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

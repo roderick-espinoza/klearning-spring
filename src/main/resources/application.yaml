@@ -12,5 +12,11 @@ spring:
         naming:
           physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
 
+security:
+  jwt:
+    secret: S2xlYXJuaW5nX0Rlc2Fycm9sbG9fV2ViXzIwMjZfQ2liZXJ0ZWM=
+    expiration: 3600000
+    cookie-name: ACCESS_TOKEN
+
 server:
     port: 8080

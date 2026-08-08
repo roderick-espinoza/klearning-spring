@@ -1,0 +1,36 @@
+info:
+  name: Crear Rol
+  type: http
+  seq: 2
+
+http:
+  method: post
+  url: "{{baseUrl}}/api/v1/roles"
+  headers:
+    - name: Content-Type
+      value: application/json
+    - name: Authorization
+      value: "Bearer {{authToken}}"
+  body:
+    type: json
+    data: |-
+      {
+        "codigoRol": "AUDITOR",
+        "nombreRol": "Auditor de Calidad",
+        "descripcion": "Revisa la calidad de la producción"
+      }
+  auth: none
+
+runtime:
+  scripts:
+    - type: after-response
+      code: |-
+        if (res.status === 201 && res.body && res.body.idRol) {
+          bru.setVar("idRolCreado", res.body.idRol);
+        }
+
+settings:
+  encodeUrl: false
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

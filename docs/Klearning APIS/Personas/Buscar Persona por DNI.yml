@@ -1,0 +1,18 @@
+info:
+  name: Buscar Persona por DNI
+  type: http
+  seq: 4
+
+http:
+  method: GET
+  url: "{{baseUrl}}/api/v1/personas/dni/12345678"
+  headers:
+    - name: Authorization
+      value: "Bearer {{authToken}}"
+  auth: none
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

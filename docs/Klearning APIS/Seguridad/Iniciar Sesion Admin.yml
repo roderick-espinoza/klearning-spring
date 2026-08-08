@@ -1,0 +1,62 @@
+info:
+  name: Iniciar Sesion Admin
+  type: http
+  seq: 1
+
+http:
+  method: post
+  url: "{{baseUrl}}/api/v1/auth/login"
+  headers:
+    - name: Content-Type
+      value: application/json
+  body:
+    type: json
+    data: |-
+      {
+        "username": "{{adminUsername}}",
+        "password": "{{adminPassword}}"
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: after-response
+      code: |-
+        if (res.status !== 200) {
+          throw new Error(
+            `El login falló con estado ${res.status}`
+          );
+        }
+
+        const responseBody = res.body;
+
+        if (!responseBody || !responseBody.token) {
+          throw new Error(
+            "La respuesta del login no contiene el token"
+          );
+        }
+
+        bru.setVar(
+          "authToken",
+          responseBody.token
+        );
+
+        bru.setVar(
+          "authenticatedUsername",
+          responseBody.username
+        );
+
+        bru.setVar(
+          "authenticatedRoles",
+          JSON.stringify(responseBody.roles)
+        );
+
+        console.log(
+          `Sesión iniciada como ${responseBody.username}`
+        );
+
+settings:
+  encodeUrl: false
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

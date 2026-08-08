@@ -1,0 +1,19 @@
+info:
+  name: Listar Personas Sin Token
+  type: http
+  seq: 1
+
+http:
+  method: GET
+  url: "{{baseUrl}}/api/v1/personas"
+  auth: none
+
+docs: |-
+  Sin la cabecera Authorization debe responder 401 en JSON.
+  Es la demostración de que la cadena del API está protegida.
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

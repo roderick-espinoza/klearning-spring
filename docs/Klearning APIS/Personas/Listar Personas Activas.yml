@@ -1,0 +1,18 @@
+info:
+  name: Listar Personas Activas
+  type: http
+  seq: 3
+
+http:
+  method: GET
+  url: "{{baseUrl}}/api/v1/personas/activos"
+  headers:
+    - name: Authorization
+      value: "Bearer {{authToken}}"
+  auth: none
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

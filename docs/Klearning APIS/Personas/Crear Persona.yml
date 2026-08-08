@@ -1,0 +1,53 @@
+info:
+  name: Crear Persona
+  type: http
+  seq: 5
+
+http:
+  method: post
+  url: "{{baseUrl}}/api/v1/personas"
+  headers:
+    - name: Content-Type
+      value: application/json
+    - name: Authorization
+      value: "Bearer {{authToken}}"
+  body:
+    type: json
+    data: |-
+      {
+        "apellidos": "Torres Vega",
+        "nombres": "Camila",
+        "dniCe": "70112233",
+        "sexo": "FEMENINO",
+        "fechaNacimiento": "1998-04-22",
+        "estadoCivil": "SOLTERO",
+        "nacionalidad": "PE",
+        "celular": "912345678",
+        "email": "camila.torres@klearning.pe",
+        "formacionAcademica": "UNIVERSITARIA",
+        "fechaIngreso": "2026-08-01",
+        "fechaCese": null,
+        "modalidadTrabajo": "REMOTO",
+        "skillPrincipal": "DISENADOR_INSTRUCCIONAL"
+      }
+  auth: none
+
+docs: |-
+  Los catálogos viajan por el nombre de la constante del enum.
+  nacionalidad usa el código ISO ("PE"), que es como se guarda en la columna.
+
+  Los campos de auditoría no se envían: createUser sale del token.
+
+runtime:
+  scripts:
+    - type: after-response
+      code: |-
+        if (res.status === 201 && res.body && res.body.idPersona) {
+          bru.setVar("idPersonaCreada", res.body.idPersona);
+        }
+
+settings:
+  encodeUrl: false
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

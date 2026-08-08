@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<body>
+
+<header th:fragment="topbar">
+  <div class="topbar d-flex align-items-center">
+    <nav class="navbar navbar-expand gap-3">
+
+      <div class="mobile-toggle-menu">
+        <i class="bx bx-menu"></i>
+      </div>
+
+      <div class="top-menu ms-auto">
+        <ul class="navbar-nav align-items-center gap-1">
+          <li class="nav-item dropdown dropdown-large">
+            <a class="nav-link dropdown-toggle dropdown-toggle-nocaret position-relative"
+               href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="bx bx-bell"></i>
+            </a>
+            <div class="dropdown-menu dropdown-menu-end">
+              <a href="javascript:;">
+                <div class="msg-header">
+                  <p class="msg-header-title">Notificaciones</p>
+                  <p class="msg-header-clear ms-auto">Producción</p>
+                </div>
+              </a>
+              <div class="header-notifications-list">
+                <a class="dropdown-item" href="javascript:;">
+                  <div class="d-flex align-items-center">
+                    <div class="notify bg-light-warning text-warning">
+                      <i class="bx bx-door-open"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                      <h6 class="msg-name">Producción</h6>
+                      <p class="msg-info">Sin novedades por el momento</p>
+                    </div>
+                  </div>
+                </a>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <div class="user-box dropdown px-3">
+        <a class="d-flex align-items-center nav-link dropdown-toggle dropdown-toggle-nocaret"
+           href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <img th:src="@{/assets/images/avatars/avatar-1.png}"
+               class="user-img" alt="user avatar"/>
+          <div class="user-info ps-3">
+            <!-- El usuario ya no sale de la sesion: lo aporta el SecurityContext,
+                 que alimenta el JwtAuthenticationFilter con el token de la cookie. -->
+            <p class="user-name mb-0"
+               sec:authentication="name">Usuario</p>
+            <p class="user-name mb-0 me-2 text-primary"
+               sec:authentication="principal.authorities">Roles</p>
+          </div>
+        </a>
+
+        <form th:action="@{/logout}" method="post" class="ms-3">
+          <button type="submit"
+                  class="btn btn-primary d-flex align-items-center gap-1">
+            Salir <i class="ri-logout-box-line fs-5"></i>
+          </button>
+        </form>
+      </div>
+
+    </nav>
+  </div>
+</header>
+
+</body>
+</html>

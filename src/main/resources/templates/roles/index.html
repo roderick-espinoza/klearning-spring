@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
+<head>
+  <title>Roles</title>
+</head>
+<body>
+
+<div layout:fragment="content">
+
+  <div th:replace="~{fragments/metrics :: metrics}"></div>
+
+  <div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
+    <div class="breadcrumb-title pe-3">Tablas</div>
+    <div class="ps-3">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb mb-0 p-0">
+          <li class="breadcrumb-item">
+            <a href="javascript:;"><i class="bx bx-home-alt"></i></a>
+          </li>
+          <li class="breadcrumb-item active" aria-current="page">Tabla de Roles</li>
+        </ol>
+      </nav>
+    </div>
+  </div>
+
+  <hr/>
+
+  <div class="row">
+    <div class="col">
+      <div class="card radius-10 mb-0">
+        <div class="card-body">
+
+          <div class="d-flex align-items-center mb-3">
+            <h5 class="mb-0 text-primary">Listado de Roles</h5>
+            <div class="ms-auto">
+              <button type="button"
+                      class="btn btn-primary rounded-pill"
+                      onclick="abrirModalNuevo()"
+                      data-bs-toggle="modal"
+                      data-bs-target="#modalRol">
+                <i class="bi bi-folder-plus"></i> Nuevo Rol
+              </button>
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table class="table align-middle mb-0">
+              <thead class="table-light">
+                <tr>
+                  <th>Acciones</th>
+                  <th>Código</th>
+                  <th>Nombre Rol</th>
+                  <th>Descripción</th>
+                  <th>Estado</th>
+                  <th>Creador</th>
+                  <th>F. Creación</th>
+                  <th>User Update</th>
+                  <th>F. Update</th>
+                </tr>
+              </thead>
+              <tbody>
+
+                <tr th:if="${#lists.isEmpty(lista)}">
+                  <td colspan="9" class="text-center text-muted">
+                    No hay roles registrados
+                  </td>
+                </tr>
+
+                <tr th:each="r : ${lista}">
+                  <td>
+                    <div class="d-flex order-actions">
+
+                      <form th:action="@{/roles/eliminar/{id}(id=${r.idRol})}"
+                            method="post"
+                            onsubmit="return confirmarEliminar(event)">
+                        <button type="submit"
+                                class="text-danger bg-light-danger border-0 btn-accion">
+                          <i class="bx bxs-trash"></i>
+                        </button>
+                      </form>
+
+                      <button type="button"
+                              class="ms-2 text-primary bg-light-primary border-0 btn-accion"
+                              data-bs-toggle="modal"
+                              data-bs-target="#modalRol"
+                              th:attr="data-id=${r.idRol},
+                                       data-codigo=${r.codigoRol},
+                                       data-nombre=${r.nombreRol},
+                                       data-descripcion=${r.descripcion}"
+                              onclick="abrirModalEditar(this)">
+                        <i class="bx bxs-edit"></i>
+                      </button>
+
+                    </div>
+                  </td>
+                  <td>
+                    <span class="badge rounded-pill text-info bg-light-info px-3 py-2"
+                          th:text="${r.codigoRol}"></span>
+                  </td>
+                  <td th:text="${r.nombreRol}"></td>
+                  <td th:text="${r.descripcion}"></td>
+                  <td>
+                    <!-- estado ya es un enum: se muestra su descripcion legible -->
+                    <span class="badge rounded-pill p-2 text-uppercase px-3"
+                          th:classappend="${r.estado?.name() == 'ACTIVO'}
+                                          ? 'text-success bg-light-success'
+                                          : (${r.estado?.name() == 'ELIMINADO'}
+                                             ? 'text-danger bg-light-danger'
+                                             : 'text-secondary bg-light')"
+                          th:text="${r.estado?.descripcion}">
+                    </span>
+                  </td>
+                  <td th:text="${r.createUser}"></td>
+                  <td th:text="${r.createDate != null ? #temporals.format(r.createDate, 'dd/MM/yyyy HH:mm') : '-'}"></td>
+                  <td th:text="${r.updatedUser != null ? r.updatedUser : '-'}"></td>
+                  <td th:text="${r.updatedDate != null ? #temporals.format(r.updatedDate, 'dd/MM/yyyy HH:mm') : '-'}"></td>
+                </tr>
+
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="modalRol" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+
+        <div class="modal-header">
+          <h5 class="modal-title text-secondary" id="modalRolTitulo">
+            Registro de Roles
+          </h5>
+          <button type="button" class="btn-close"
+                  data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <!-- Un solo formulario para crear y editar: el JS cambia el action a
+             /roles (POST) o /roles/{id} segun el boton que abrio el modal. -->
+        <form id="formRol" th:action="@{/roles}" method="post">
+          <div class="modal-body">
+
+            <div class="row">
+              <div class="col-md-12 mb-3">
+                <label class="form-label text-primary">
+                  <i class="bi bi-check2-all text-primary"></i> Código
+                </label>
+                <input type="text" name="codigoRol" id="inputCodigoRol"
+                       class="form-control text-uppercase"
+                       pattern="[A-Z][A-Z0-9_]*"
+                       title="Solo mayúsculas, números y guion bajo"
+                       required/>
+                <div class="form-text">
+                  Se usa para los permisos (ROLE_&lt;código&gt;). Sin espacios ni tildes.
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12 mb-3">
+                <label class="form-label text-primary">
+                  <i class="bi bi-check2-all text-primary"></i> Nombre
+                </label>
+                <input type="text" name="nombreRol" id="inputNombreRol"
+                       class="form-control" required/>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12 mb-3">
+                <label class="form-label text-primary">
+                  <i class="bi bi-check2-all text-primary"></i> Descripción
+                </label>
+                <textarea class="form-control" name="descripcion"
+                          id="inputDescripcionRol" rows="3" required></textarea>
+              </div>
+            </div>
+
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary"
+                    data-bs-dismiss="modal">Cerrar</button>
+            <button type="submit" class="btn btn-primary">Guardar</button>
+          </div>
+        </form>
+
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<th:block layout:fragment="scripts">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script th:inline="javascript">
+    const URL_ROLES = /*[[@{/roles}]]*/ '/roles';
+  </script>
+  <script th:src="@{/js/roles/index.js}"></script>
+</th:block>
+
+</body>
+</html>

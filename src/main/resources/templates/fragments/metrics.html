@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<!-- Los totales los aporta MetricasViewAdvice, asi que no hay que repetirlos
+     en cada controlador de vista. -->
+<div th:fragment="metrics" class="row row-cols-1 row-cols-lg-2 row-cols-xl-3 mb-3">
+
+  <div class="col">
+    <div class="card radius-10 overflow-hidden border-bottom border-primary">
+      <div class="card-body">
+        <div class="d-flex align-items-center">
+          <div>
+            <p class="mb-0">Personas</p>
+            <h5 class="mb-0" th:text="${totalPersonas}">0</h5>
+          </div>
+          <div class="ms-auto">
+            <i class="bx bx-group font-30 text-primary"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col">
+    <div class="card radius-10 overflow-hidden border-bottom border-success">
+      <div class="card-body">
+        <div class="d-flex align-items-center">
+          <div>
+            <p class="mb-0">Usuarios</p>
+            <h5 class="mb-0" th:text="${totalUsuarios}">0</h5>
+          </div>
+          <div class="ms-auto">
+            <i class="bx bx-user-circle font-30 text-success"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col">
+    <div class="card radius-10 overflow-hidden border-bottom border-info">
+      <div class="card-body">
+        <div class="d-flex align-items-center">
+          <div>
+            <p class="mb-0">Roles</p>
+            <h5 class="mb-0" th:text="${totalRoles}">0</h5>
+          </div>
+          <div class="ms-auto">
+            <i class="bx bx-key font-30 text-info"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,22 @@
+info:
+  name: Roles Sin Permisos
+  type: http
+  seq: 4
+
+http:
+  method: GET
+  url: "{{baseUrl}}/api/v1/roles"
+  headers:
+    - name: Authorization
+      value: "Bearer {{tokenSinPermisos}}"
+  auth: none
+
+docs: |-
+  Con el token de un usuario sin rol ADMIN debe responder 403.
+  Ejecuta antes "Iniciar Sesion Sin Permisos".
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

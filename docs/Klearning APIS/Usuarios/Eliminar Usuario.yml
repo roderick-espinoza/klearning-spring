@@ -1,0 +1,22 @@
+info:
+  name: Eliminar Usuario
+  type: http
+  seq: 5
+
+http:
+  method: delete
+  url: "{{baseUrl}}/api/v1/usuarios/{{idUsuarioCreado}}"
+  headers:
+    - name: Authorization
+      value: "Bearer {{authToken}}"
+  auth: none
+
+docs: |-
+  Borrado lógico: la fila no desaparece, pasa a estado ELIMINADO ('2')
+  y se rellenan deletedUser y deletedDate.
+
+settings:
+  encodeUrl: false
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

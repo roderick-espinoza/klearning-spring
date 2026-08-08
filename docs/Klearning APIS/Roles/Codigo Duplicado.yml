@@ -1,0 +1,31 @@
+info:
+  name: Codigo Duplicado
+  type: http
+  seq: 3
+
+http:
+  method: post
+  url: "{{baseUrl}}/api/v1/roles"
+  headers:
+    - name: Content-Type
+      value: application/json
+    - name: Authorization
+      value: "Bearer {{authToken}}"
+  body:
+    type: json
+    data: |-
+      {
+        "codigoRol": "ADMIN",
+        "nombreRol": "Otro Administrador",
+        "descripcion": "Debe fallar por código repetido"
+      }
+  auth: none
+
+docs: |-
+  Debe responder 409 (RecursoDuplicadoException).
+
+settings:
+  encodeUrl: false
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

@@ -1,0 +1,44 @@
+{
+  "name": "Klearning Env - DEV",
+  "variables": [
+    {
+      "name": "baseUrl",
+      "value": "http://localhost:8080",
+      "type": "text",
+      "enabled": true,
+      "secret": false
+    },
+    {
+      "name": "adminUsername",
+      "value": "admin",
+      "type": "text",
+      "enabled": true,
+      "secret": false
+    },
+    {
+      "name": "adminPassword",
+      "value": "Admin123",
+      "type": "text",
+      "enabled": true,
+      "secret": false
+    },
+    {
+      "name": "usuarioSinPermisos",
+      "value": "rmendoza",
+      "type": "text",
+      "enabled": true,
+      "secret": false
+    },
+    {
+      "name": "passwordSinPermisos",
+      "value": "Klearning123",
+      "type": "text",
+      "enabled": true,
+      "secret": false
+    }
+  ],
+  "info": {
+    "type": "bruno-environment",
+    "exportedUsing": "Bruno/v4.0.0"
+  }
+}

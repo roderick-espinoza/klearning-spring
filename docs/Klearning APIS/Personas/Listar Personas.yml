@@ -1,0 +1,22 @@
+info:
+  name: Listar Personas
+  type: http
+  seq: 2
+
+http:
+  method: GET
+  url: "{{baseUrl}}/api/v1/personas"
+  headers:
+    - name: Authorization
+      value: "Bearer {{authToken}}"
+  auth: none
+
+docs: |-
+  Requiere haber ejecutado antes "Iniciar Sesion Admin", que deja el token
+  en la variable authToken.
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

@@ -1,12 +1,42 @@
 /*
  * A diferencia del resto de CRUD, aqui el rol no es un select simple sino uno
- * multiple sobre la tabla usuarios_roles. Por eso al editar no vale asignar
- * select.value: hay que recorrer las opciones y marcar las que esten en el
- * data-roles de la fila.
+ * multiple sobre la tabla usuarios_roles. Ese select lo gobierna Tom Select, que
+ * lo pinta como un desplegable con chips: por eso marcar opcion.selected a mano
+ * ya no sirve, hay que avisar al widget con setValue().
  *
  * La contraseña tampoco se precarga nunca: dejarla vacia al editar significa
  * "no cambiarla", y asi lo interpreta UsuarioServiceImpl.
  */
+
+let tomRoles;
+
+document.addEventListener('DOMContentLoaded', function () {
+
+    // El modal ya esta en el DOM desde el arranque, asi que se instancia una
+    // sola vez y no cada vez que se abre.
+    tomRoles = new TomSelect('#selectRoles', {
+        plugins: ['remove_button'],
+        placeholder: 'Selecciona uno o más roles',
+        maxItems: null,
+        hideSelected: false,
+        closeAfterSelect: false
+    });
+
+    // Sustituye al required que el navegador ya no puede validar sobre un
+    // select oculto. El servidor lo sigue exigiendo con @NotEmpty.
+    document.getElementById('formUsuario').addEventListener('submit', function (e) {
+        if (tomRoles.getValue().length === 0) {
+            e.preventDefault();
+
+            Swal.fire({
+                title: 'Falta asignar un rol',
+                text: 'Selecciona al menos un rol para el usuario.',
+                icon: 'warning',
+                confirmButtonColor: '#0d6efd'
+            });
+        }
+    });
+});
 
 function abrirModalNuevo() {
     document.getElementById('modalUsuarioTitulo').textContent = 'Nuevo Usuario';
@@ -45,11 +75,9 @@ function abrirModalEditar(btn) {
 }
 
 function marcarRoles(idsRoles) {
-    const select = document.getElementById('selectRoles');
-
-    for (const opcion of select.options) {
-        opcion.selected = idsRoles.includes(opcion.value);
-    }
+    // El segundo argumento es "silent": evita disparar el change y con el las
+    // validaciones que Tom Select encadena al abrir el modal.
+    tomRoles.setValue(idsRoles, true);
 }
 
 function confirmarEliminar(e) {

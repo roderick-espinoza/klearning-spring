@@ -1,9 +1,9 @@
 package com.cibertec.klearning.security.api.view;
 
-import com.cibertec.klearning.business.api.view.PersonaViewController;
 import com.cibertec.klearning.business.domain.service.interfaces.PersonaService;
 import com.cibertec.klearning.security.domain.service.interfaces.RolService;
 import com.cibertec.klearning.security.domain.service.interfaces.UsuarioService;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
@@ -12,15 +12,15 @@ import org.springframework.web.bind.annotation.ModelAttribute;
  * autenticadas. Se hace aqui, y no en cada controlador, para no repetir las
  * mismas tres lineas cuatro veces.
  * <p>
- * Se declara por tipos y no por paquete a proposito: el LoginViewController
- * queda fuera, porque en la pantalla de login todavia no hay usuario y no tiene
- * sentido ir a la base de datos.
+ * Se declara por paquete, igual que el {@link SesionViewAdvice}: estaba por
+ * tipos para dejar fuera al LoginViewController, pero eso obligaba a apuntar
+ * cada vista nueva a la lista y, si alguien se olvidaba, fragments/metrics.html
+ * salia con las tres tarjetas a null. Que el login no toque la base de datos lo
+ * resuelve el guard de {@link SesionUsuario}, no el scoping.
  */
-@ControllerAdvice(assignableTypes = {
-        HomeViewController.class,
-        PersonaViewController.class,
-        UsuarioViewController.class,
-        RolViewController.class
+@ControllerAdvice(basePackages = {
+        PaquetesVista.SECURITY,
+        PaquetesVista.BUSINESS
 })
 public class MetricasViewAdvice {
 
@@ -37,17 +37,17 @@ public class MetricasViewAdvice {
     }
 
     @ModelAttribute("totalPersonas")
-    public int totalPersonas() {
-        return personaService.listar().size();
+    public int totalPersonas(Authentication autenticacion) {
+        return SesionUsuario.hay(autenticacion) ? personaService.listar().size() : 0;
     }
 
     @ModelAttribute("totalUsuarios")
-    public int totalUsuarios() {
-        return usuarioService.listar().size();
+    public int totalUsuarios(Authentication autenticacion) {
+        return SesionUsuario.hay(autenticacion) ? usuarioService.listar().size() : 0;
     }
 
     @ModelAttribute("totalRoles")
-    public int totalRoles() {
-        return rolService.listar().size();
+    public int totalRoles(Authentication autenticacion) {
+        return SesionUsuario.hay(autenticacion) ? rolService.listar().size() : 0;
     }
 }

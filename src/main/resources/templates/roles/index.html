@@ -150,13 +150,18 @@
                 <label class="form-label text-primary">
                   <i class="bi bi-check2-all text-primary"></i> Código
                 </label>
+                <!-- El pattern acepta minusculas a proposito: el JS las pasa a
+                     mayusculas mientras se escribe y el RolRequestDto vuelve a
+                     normalizar en el servidor, asi que no hay que bloquear al
+                     usuario por teclear "admin". -->
                 <input type="text" name="codigoRol" id="inputCodigoRol"
                        class="form-control text-uppercase"
-                       pattern="[A-Z][A-Z0-9_]*"
-                       title="Solo mayúsculas, números y guion bajo"
+                       placeholder="ADMIN"
+                       pattern="[A-Za-z][A-Za-z0-9_]*"
+                       title="Solo letras, números y guion bajo"
                        required/>
                 <div class="form-text">
-                  Se usa para los permisos (ROLE_&lt;código&gt;). Sin espacios ni tildes.
+                  Se usa para los permisos. Sin espacios ni tildes.
                 </div>
               </div>
             </div>

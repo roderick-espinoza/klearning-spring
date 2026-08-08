@@ -45,8 +45,11 @@
 
           <p class="mb-3">
             Roles asignados:
-            <span class="badge rounded-pill text-primary bg-light-primary px-3 py-2"
-                  sec:authentication="principal.authorities">roles</span>
+            <span th:each="rol : ${rolesUsuario}"
+                  class="badge rounded-pill text-primary bg-light-primary px-3 py-2 me-1"
+                  th:text="${rol}">Rol</span>
+            <span th:if="${#lists.isEmpty(rolesUsuario)}"
+                  class="text-muted">sin roles asignados</span>
           </p>
 
           <div class="d-flex flex-wrap gap-2">

@@ -38,10 +38,17 @@ public class LoginViewController {
 
     @GetMapping("/login")
     public String mostrarLogin(@RequestParam(required = false) String logout,
+                               @RequestParam(required = false) String expirado,
                                Model model) {
         if (logout != null) {
             model.addAttribute("mensaje", "Has cerrado la sesión correctamente");
         }
+
+        // Lo manda el VistaAccessDeniedHandler cuando el token CSRF ya no vale.
+        if (expirado != null) {
+            model.addAttribute("error", "Tu sesión expiró, vuelve a ingresar");
+        }
+
         return "login";
     }
 

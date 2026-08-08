@@ -8,6 +8,12 @@
 </head>
 <body>
 
+<th:block layout:fragment="head-extra">
+  <!-- Tom Select solo se carga en esta vista, que es la unica con multiseleccion. -->
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/tom-select@2.4.3/dist/css/tom-select.bootstrap5.min.css"/>
+</th:block>
+
 <div layout:fragment="content">
 
   <div th:replace="~{fragments/metrics :: metrics}"></div>
@@ -177,16 +183,19 @@
               <div class="col-md-12 mb-3">
                 <label class="form-label text-primary">Roles</label>
                 <!-- Un usuario puede tener varios roles: cada seleccion se
-                     traduce en una fila de la tabla usuarios_roles. -->
+                     traduce en una fila de la tabla usuarios_roles.
+                     Tom Select lo convierte en un desplegable con chips; el
+                     select sigue siendo la fuente de verdad y envia idsRoles
+                     repetido, igual que antes.
+                     Sin required a proposito: Tom Select oculta este select y el
+                     navegador se niega a validar un control que no puede
+                     enfocar, asi que el aviso lo da el JS. -->
                 <select class="form-select" name="idsRoles" id="selectRoles"
-                        multiple size="6" required>
+                        multiple>
                   <option th:each="r : ${roles}"
                           th:value="${r.idRol}"
-                          th:text="|${r.nombreRol} (${r.codigoRol})|"></option>
+                          th:text="${r.nombreRol}"></option>
                 </select>
-                <div class="form-text">
-                  Mantén pulsado Ctrl (o Cmd) para seleccionar varios.
-                </div>
               </div>
             </div>
 
@@ -206,6 +215,7 @@
 
 <th:block layout:fragment="scripts">
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://cdn.jsdelivr.net/npm/tom-select@2.4.3/dist/js/tom-select.complete.min.js"></script>
   <script th:inline="javascript">
     const URL_USUARIOS = /*[[@{/usuarios}]]*/ '/usuarios';
   </script>

@@ -50,14 +50,20 @@
                class="user-img" alt="user avatar"/>
           <div class="user-info ps-3">
             <!-- El usuario ya no sale de la sesion: lo aporta el SecurityContext,
-                 que alimenta el JwtAuthenticationFilter con el token de la cookie. -->
+                 que alimenta el JwtAuthenticationFilter con el token de la cookie.
+                 Los roles, en cambio, los pone el SesionViewAdvice: aqui interesa
+                 el nombreRol y no la authority tecnica. -->
             <p class="user-name mb-0"
                sec:authentication="name">Usuario</p>
             <p class="user-name mb-0 me-2 text-primary"
-               sec:authentication="principal.authorities">Roles</p>
+               th:text="${#strings.listJoin(rolesUsuario, ', ')}">Roles</p>
           </div>
         </a>
 
+        <!-- Thymeleaf inyecta solo el _csrf oculto en los form con th:action.
+             Si aun asi el token no cuadra (pagina vieja en una pestaña abierta,
+             cookie borrada), el VistaAccessDeniedHandler manda al login en vez
+             de dejar la Whitelabel 403 que salia antes. -->
         <form th:action="@{/logout}" method="post" class="ms-3">
           <button type="submit"
                   class="btn btn-primary d-flex align-items-center gap-1">

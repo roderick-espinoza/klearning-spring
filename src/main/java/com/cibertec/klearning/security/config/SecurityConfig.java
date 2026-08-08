@@ -1,6 +1,7 @@
 package com.cibertec.klearning.security.config;
 
 import com.cibertec.klearning.security.domain.service.implementations.CustomUserDetailsService;
+import com.cibertec.klearning.security.filter.CsrfCookieFilter;
 import com.cibertec.klearning.security.filter.JwtAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -15,6 +16,7 @@ import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 /**
  * Dos cadenas de filtros, una sola logica de autenticacion.
@@ -106,9 +108,12 @@ public class SecurityConfig {
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
+                // Sin accessDeniedHandler, un fallo de CSRF sale como Whitelabel
+                // 403 en la misma URL. Con el, el usuario vuelve al login.
                 .exceptionHandling(exceptions -> exceptions
                         .authenticationEntryPoint(
-                                new LoginUrlAuthenticationEntryPoint("/login")))
+                                new LoginUrlAuthenticationEntryPoint("/login"))
+                        .accessDeniedHandler(new VistaAccessDeniedHandler(nombreCookie)))
 
                 // El LogoutFilter de Spring atiende POST /logout antes que
                 // cualquier controlador, asi que el borrado de la cookie con el
@@ -116,7 +121,13 @@ public class SecurityConfig {
                 // nunca llega a ejecutarse y la sesion seguiria abierta.
                 .logout(logout -> logout
                         .logoutUrl("/logout")
+                        // Aqui solo la del token: el XSRF-TOKEN lo limpia el
+                        // CsrfLogoutHandler que CsrfConfigurer engancha solo al
+                        // logout. Borrarlo tambien a mano emitia un segundo
+                        // Set-Cookie para el mismo nombre, con otros atributos,
+                        // en la misma respuesta.
                         .deleteCookies(nombreCookie)
+                        .clearAuthentication(true)
                         .logoutSuccessUrl("/login?logout"))
 
                 .authorizeHttpRequests(auth -> auth
@@ -130,6 +141,11 @@ public class SecurityConfig {
 
                 .addFilterBefore(jwtAuthenticationFilter,
                         UsernamePasswordAuthenticationFilter.class)
+
+                // Sin esto la cookie del token CSRF se intenta escribir a mitad
+                // del render y Tomcat la descarta: ver CsrfCookieFilter.
+                .addFilterAfter(new CsrfCookieFilter(),
+                        BasicAuthenticationFilter.class)
 
                 .build();
     }

@@ -67,7 +67,9 @@ public class UsuarioServiceImpl
 
     @Override
     public UsuarioResponseDto obtenerPorUsuario(String usuario) {
-        Usuario encontrado = repository.findByUsuario(usuario)
+        // Con @EntityGraph, como en el CustomUserDetailsService: persona es LAZY
+        // y open-in-view esta en false, asi que el mapper la necesita ya cargada.
+        Usuario encontrado = repository.findByUsuarioIgnoreCase(usuario)
                 .orElseThrow(() -> new RecursoNoEncontradoException(
                         "Usuario no encontrado: " + usuario));
         return usuarioMapper.toResponseDto(encontrado);

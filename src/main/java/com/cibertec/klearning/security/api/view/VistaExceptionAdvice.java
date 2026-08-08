@@ -3,7 +3,6 @@ package com.cibertec.klearning.security.api.view;
 import com.cibertec.klearning.business.api.exception.RecursoDuplicadoException;
 import com.cibertec.klearning.business.api.exception.RecursoNoEncontradoException;
 import com.cibertec.klearning.business.api.exception.SolicitudInvalidaException;
-import com.cibertec.klearning.business.api.view.PersonaViewController;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
@@ -17,11 +16,15 @@ import java.util.stream.Collectors;
  * Equivalente al GlobalExceptionHandler pero para las vistas: en vez de
  * devolver JSON, deja el mensaje como flash attribute y vuelve a la pantalla
  * anterior, que es lo que espera un usuario delante de un formulario.
+ * <p>
+ * Por paquete, igual que los otros advices de vista: asi un modulo nuevo no se
+ * queda sin red y no hay que mantener una lista de clases. Home y Login entran
+ * ahora tambien, y no molesta: {@link #volver} deduce el destino del primer
+ * segmento de la URL, que para /home y /login son pantallas validas.
  */
-@ControllerAdvice(assignableTypes = {
-        PersonaViewController.class,
-        UsuarioViewController.class,
-        RolViewController.class
+@ControllerAdvice(basePackages = {
+        PaquetesVista.SECURITY,
+        PaquetesVista.BUSINESS
 })
 public class VistaExceptionAdvice {
 

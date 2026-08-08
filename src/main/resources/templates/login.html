@@ -124,13 +124,12 @@
 
 				 <div class="d-flex align-items-center">
 
+				     <!-- El titulo estaba fijo en "Credenciales incorrectas" y
+				          contradecia al mensaje: en /login?expirado salia junto a
+				          "Tu sesion expiro". El texto lo pone el controlador. -->
 				     <div class="ms-3">
 
-				         <h6 class="mb-0 text-danger">
-				             Credenciales incorrectas
-				         </h6>
-
-				         <div th:text="${error}"></div>
+				         <h6 class="mb-0 text-danger" th:text="${error}"></h6>
 
 				     </div>
 
